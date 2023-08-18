@@ -1,20 +1,35 @@
 import React from "react";
 import NewsCard from "./NewsCard.jsx";
+import {Select, MenuItem } from '@mui/material';
 
 const Body = (props) => {
     const [visitedStories, setVisitedStories] = React.useState([]);
-
+    
+    const [currentPage, setCurrentPage] = React.useState(1);
+    
+    // Use url to check if a story is visited
     const isVisited = (storyURL) => {
-        return visitedStories.includes(storyURL); // Use story.id to check if a story is visited
+        return visitedStories.includes(storyURL); 
     };
-
+    
+    // Use url to mark a story as visited
     const handleLinkClick = (storyURL) => {
         if (!isVisited(storyURL)) {
-            setVisitedStories([...visitedStories, storyURL]) // Use story.id to mark a story as visited
+            setVisitedStories([...visitedStories, storyURL]) 
         }
     };
-
-    const newsCards = props.stories.map((story) => {
+    // move to next page
+    const handleNextPage= () => {
+        setCurrentPage(currentPage + 1);
+    };
+    // move to previous page
+    const handlePrevPage= () => {
+        setCurrentPage(currentPage - 1);
+    };
+    const lastIndex = currentPage * props.sliceLength;
+    const firstIndex = lastIndex - props.sliceLength;
+    const currentStories = props.stories.slice(firstIndex, lastIndex);
+    const newsCards = currentStories.map((story) => { //props.stories.map((story) => {
         return (
             <NewsCard 
                 key={story.id} 
@@ -28,7 +43,13 @@ const Body = (props) => {
     return (
         <div className="newsBody">
             <h1>Body</h1>
+            
             {newsCards}
+            <div className="pagination">
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+                <button onClick={handleNextPage} disabled={currentPage === Math.ceil(props.stories.length / props.sliceLength)}>Next</button>
+            </div>
+
         </div>
     );
 }

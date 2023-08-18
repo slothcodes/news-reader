@@ -7,6 +7,7 @@ const NewsReader = () => {
     const [loading, setLoading] = React.useState(true);
     const [activeStories, setActiveStories] = React.useState([]); 
     const [category, setCategory] = React.useState('');
+    const [sliceLength, setSliceLength] = React.useState(25);
     
     // fetch news stories on load
     React.useEffect(() => {
@@ -25,6 +26,15 @@ const NewsReader = () => {
         fetchNews();
         
     }, []);
+    // filter news stories by category    
+    React.useEffect(() => {
+        getCategory();
+    }, [category]);
+    // change number of stories per page
+    const handleSliceChange = (event) => {
+        console.log('slice length changed', event.target.value)
+        setSliceLength(event.target.value);
+    };
     // map selected category to news stories
     const getCategory = () => {
         switch (category) {
@@ -45,16 +55,12 @@ const NewsReader = () => {
                 return 
         }
     };
-    // filter news stories by category    
-    React.useEffect(() => {
-        getCategory();
-    }, [category]);
 
     return (
         <div>
             <h1>NewsReader</h1>
-            <Header category= {category} setCategory={setCategory} />  
-            {loading ? <h1>Loading...</h1>: <Body stories={activeStories}/>}
+            <Header category= {category} setCategory={setCategory} sliceLength={sliceLength} handleSliceChange={handleSliceChange}/>  
+            {loading ? <h1>Loading...</h1>: <Body stories={activeStories} sliceLength={sliceLength} />}
         </div>
     );
 }
