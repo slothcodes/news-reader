@@ -29,7 +29,7 @@ const Body = (props) => {
     const lastIndex = currentPage * props.sliceLength;
     const firstIndex = lastIndex - props.sliceLength;
     const currentStories = props.stories.slice(firstIndex, lastIndex);
-    const newsCards = currentStories.map((story) => { //props.stories.map((story) => {
+    const newsCards = currentStories.map((story) => {
         return (
             <NewsCard 
                 key={story.id} 
